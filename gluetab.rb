@@ -1,3 +1,14 @@
+# Copyright 2009, Ryan Schenk rschenk@gmail.com
+# Glue Tabs
+#
+# 
+
+# THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#-----------------------------------------------------------------------------
+
+
 require 'sketchup.rb'
 
 class GlueTab
@@ -12,7 +23,7 @@ class GlueTab
 		
 		if edge = ph.picked_edge
 			faces = edge.faces
-			if faces.length == 1
+			if faces.length == 1 # If we're on a boundary edge
 				draw_tab(model, edge, faces.first)
 			end
 		end
@@ -22,18 +33,17 @@ class GlueTab
 		normal_vector = face.normal
 		line = edge.line
 		
-		# Calculate a unit vector perpendicular to the edge
+		# Calculate a magic unit vector perpendicular to the edge
 		v = normal_vector * line[1]
 		
 		tab_points = calculate_tab_points(edge.start.position, edge.end.position, v, line[1])
 		
-		# Sometimes the vectors will get reversed, and the tab will be positioned on the face.
-		# If that's the case, reverse the magic vector to make the tab is point away from the face
-		# I hate having to recalculate the whole thing, but it's the best solution I could come up with
+		# Sometimes the magic unit vector will get reversed, and the tab will be positioned on the face.
+		# If that's the case, reverse the magic vector to make the tab is point away from the face.
+		# I hate having to recalculate the whole thing, but it's the best solution I could come up with.
 		unless (face.classify_point(tab_points[2]) == 8) && (face.classify_point(tab_points[3]) == 8)
 			tab_points = calculate_tab_points(edge.start.position, edge.end.position, v.reverse, line[1])
 		end
-		
 		
 		model.entities.add_face tab_points
 	end
