@@ -20,4 +20,5 @@ On a Mac, that's in `/Library/Application Support/Google SketchUp 7/SketchUp/plu
 Usage
 =====
 * Select the Glue Tab tool from the Plugins menu
-* Start clicking on boundary edges to make glue tabs. That's it!
+* Start clicking on boundary edges to make glue tabs.
+* You can adjust the tab width in the status bar (Thanks to Jim Foltz for this!)
