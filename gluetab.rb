@@ -88,12 +88,23 @@ class GlueTab
 
         trapezoid_end_vector = line_vector.clone
         trapezoid_end_vector.length = @tab_width
+        
+        edge_length = edge_start_position.distance(edge_end_position)
 
-        pt1 = edge_start_position
-        pt2 = edge_end_position
-        pt3 = edge_end_position   + tab_width_vector - trapezoid_end_vector
-        pt4 = edge_start_position + tab_width_vector + trapezoid_end_vector
-        [pt1, pt2, pt3, pt4]
+        # If the edge is too short to handle a trapezoidal tab at the @tab_width,
+        # we'll make a triangular one that's as wide as possible
+        if trapezoid_end_vector.length >=  edge_length / 2
+          making_triangular_tab = true
+          tab_width_vector.length = trapezoid_end_vector.length = edge_length / 2
+        end
+
+        points = [edge_start_position,
+                  edge_end_position,
+                  edge_end_position   + tab_width_vector - trapezoid_end_vector]
+                    
+        points << edge_start_position + tab_width_vector + trapezoid_end_vector unless making_triangular_tab
+        
+        return points
     end
 end
 
