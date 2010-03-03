@@ -17,9 +17,19 @@ class GlueTab
 	end
 
     def activate
+        begin
+            @tab_width = Sketchup.read_default("GlueTab", "tab_width").to_l
+        rescue
+            puts "Couldn't convert value to Length"
+            @tab_width = 1.0
+        end
         Sketchup::set_status_text("Glue Tab: Select Edge", SB_PROMPT)
         Sketchup::set_status_text("Tab Width:", SB_VCB_LABEL)
         Sketchup::set_status_text(@tab_width, SB_VCB_VALUE)
+    end
+
+    def deactivate view
+        Sketchup.write_default("GlueTab", 'tab_width', @tab_width.to_f)
     end
 
     def resume(view)
